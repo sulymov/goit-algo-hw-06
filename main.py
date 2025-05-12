@@ -13,7 +13,7 @@ class Name(Field):
 class Phone(Field):
     def __init__(self, value):
         if len(value) != 10:
-            raise PhoneLenError("Phone number less or bigger than 10 digits")
+            raise PhoneLenError("Phone number less or more than 10 digits")
         if not value.isdigit():
             raise PhoneDigitError("Phone number contains not only digits")
         else:
@@ -23,6 +23,9 @@ class PhoneLenError(Exception):
     pass
 
 class PhoneDigitError(Exception):
+    pass
+
+class ValueError(Exception):
     pass
 
 
@@ -38,14 +41,17 @@ class Record:
             print(e)
       
     def remove_phone(self, del_phone : str):
-            if self.find_phone(del_phone) != None:
-                self.phones.remove(self.find_phone(del_phone))
-            else:
-                print("This phone isn't exists!")
+            phone = self.find_phone(del_phone)
+
+            if phone:
+                self.phones.remove(phone)
                 
     def edit_phone(self, old_phone : str, new_phone : str):
-        self.remove_phone(old_phone)
-        self.add_phone(new_phone)
+        if self.find_phone(old_phone) == None:
+            raise ValueError("There isn't such a number")
+        else:
+            self.remove_phone(old_phone)
+            self.add_phone(new_phone)
     
     def find_phone(self, find_phone):
         for phone in self.phones:
@@ -62,11 +68,7 @@ class AddressBook(UserDict):
         self.data[record.name.value] = record
 
     def find(self, name):
-        self.name = name
-        if name in self.data:
-            return self.data.get(name)
-        else:
-            return None
+        return self.data.get(name)
         
     def delete(self, name):
         del self.data[name]
