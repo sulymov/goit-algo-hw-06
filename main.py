@@ -25,9 +25,6 @@ class PhoneLenError(Exception):
 class PhoneDigitError(Exception):
     pass
 
-class ValueError(Exception):
-    pass
-
 
 class Record:
     def __init__(self, name):
@@ -35,11 +32,8 @@ class Record:
         self.phones: list(Phone) = []
 
     def add_phone(self, phone: str):
-        try:
-            self.phones.append(Phone(phone))
-        except (PhoneLenError, PhoneDigitError) as e:
-            print(e)
-      
+        self.phones.append(Phone(phone))
+              
     def remove_phone(self, del_phone : str):
             phone = self.find_phone(del_phone)
 
@@ -50,8 +44,8 @@ class Record:
         if self.find_phone(old_phone) == None:
             raise ValueError("There isn't such a number")
         else:
-            self.remove_phone(old_phone)
             self.add_phone(new_phone)
+            self.remove_phone(old_phone)
     
     def find_phone(self, find_phone):
         for phone in self.phones:
